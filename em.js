@@ -135,11 +135,3 @@ function multivariate_gaussian_fit(points, n_groups, epsilon) {
     }
     return groups;
 }
-
-var points = [
-    [1,2], [3,4], [5,6], [1000, 1000]
-];
-
-var groups = multivariate_gaussian_fit(points, 3);
-
-console.log(groups);
