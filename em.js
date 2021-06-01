@@ -110,12 +110,13 @@ function multivariate_gaussian_fit(points, n_groups, epsilon) {
                 sum += proba;
             }
             // Convert to probabilities by dividing by the sum
-            if (sum > 0)
+            if (sum > 0) {
                 for (var g = 0; g < n_groups; g++)
                     line[g] /= sum;
-            else
+            } else {
                 for (var g = 0; g < n_groups; g++)
                     line[g] = 1/n_groups;
+            }
             res[p] = line;
         }
 
