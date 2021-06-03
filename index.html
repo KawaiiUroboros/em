@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class=" FB_FW_ext BlitzScPluginAdapter">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>EM Алгоритм</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="scripts/style.css">
+		<script src="scripts/gmm.js"></script>
+		<script src="scripts/draw.js" defer=""></script>
+		<script src="scripts/controls.js" defer=""></script>
+		<script src="scripts/main.js" defer=""></script>
+	</head>
+	<body>
+
+
+		<h1>EM Алгоритм</h1>
+		<div class="container">
+			<div class="graph">
+				<div class="y-axis" style="height: 609px;">
+					<div>100</div>
+					<div>75</div>
+					<div>50</div>
+					<div>25</div>
+					<div>0</div>
+					<div>-25</div>
+					<div>-50</div>
+					<div>-75</div>
+					<div>-100</div>
+				</div>
+				<div class="canvas-wrapper" style="height: 609px;">
+					<canvas width="593" height="593"></canvas>
+				</div>
+				<div class="x-axis">
+					<div>-100</div>
+					<div>-75</div>
+					<div>-50</div>
+					<div>-25</div>
+					<div>0</div>
+					<div>25</div>
+					<div>50</div>
+					<div>75</div>
+					<div>100</div>
+				</div>
+			</div>
+
+			<div class="controls controls-top">
+				<button id="btn-clear">Обновить</button>
+				<br>
+				Нажмите на график, чтобы добавить
+				<select id="number-of-points">
+					<option>1</option>
+					<option>5</option>
+					<option>20</option>
+				</select>
+				точек
+			</div>
+			
+			<div class="controls controls-bottom">
+				Кластеры:
+				<select id="number-of-clusters">
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option selected="">4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+				</select>
+<!--				<button id="btn-init-clusters">Initialize Clusters</button>-->
+				<br>
+				<button id="btn-run-a" class="btn-run">1 итерация</button>
+				<button id="btn-run-b" class="btn-run">10 итераций</button>
+			</div>
+
+		</div>
+	</body>
+</html>

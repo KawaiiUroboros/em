@@ -1,0 +1,128 @@
+'use strict';
+
+const canvas = document.querySelector('.graph canvas');
+const ctx = canvas.getContext('2d');
+const xMin = -100, xMax = 100;
+const yMin = -100, yMax = 100;
+
+const clusterColors = [
+    'rgb(238,5,7)',
+    'rgb( 55, 126, 184)',
+    'rgb( 77, 175,  74)',
+    'rgb(152,  78, 163)',
+    'rgb(255, 127,   0)',
+    'rgb(255, 255,  51)',
+    'rgb(166,  86,  40)',
+];
+
+const points = [];
+
+let gmm = null;
+
+
+function generateGroup() {
+
+    // TODO: random radius..
+    let a = 10 + Math.random() * 40;
+    let b = 10 + Math.random() * 40;
+
+    let centerX = 100 - Math.random() * 200;
+    let centerY = 100 - Math.random() * 200;
+
+    for (let i = 0; i < 100; ++i) {
+
+        let r = a * Math.random();
+        let fi = 2 * Math.PI * Math.random();
+        let x = centerX + r * Math.cos(fi);
+        let y = centerY + b / a * r * Math.sin(fi);
+
+        points.push([x, y]);
+    }
+
+}
+
+function generatePoints() {
+    for (let i = 0; i < 2 + Math.random() * 7; ++i) {
+        generateGroup();
+    }
+}
+
+generatePoints();
+
+
+canvas.addEventListener('click', function (e) {
+    let w = canvas.width;
+    let h = canvas.height;
+
+    let p = [e.offsetX / w * (xMax - xMin) + xMin, e.offsetY / h * (yMax - yMin) + yMin];
+
+    let sel = document.getElementById('number-of-points');
+    let n = Number(sel.options[sel.selectedIndex].text);  // number of points
+
+    if (n === 1) {
+        points.push(p);
+        if (gmm) gmm.addPoint(p);
+    } else for (let i = 0; i < n; i++) {
+        let alpha = Math.random() * 2 * Math.PI / n + i / n * 2 * Math.PI;
+        let r = Math.random() * (xMax - xMin) * .04;
+        let q = [p[0] + r * Math.cos(alpha), p[1] + r * Math.sin(alpha)];
+        points.push(q);
+        if (gmm) gmm.addPoint(q);
+    }
+
+    redraw();
+});
+
+function points2string() {
+    console.log(
+        points
+            .map(p => [Math.round(p[0]), Math.round(p[1])])
+            .map(p => '[' + p.toString() + ']')
+            .join(',')
+    );
+}
+
+const yAxis = document.querySelector('.graph .y-axis');
+const canvasWrap = document.querySelector('.graph .canvas-wrapper');
+const canvasWrapStyle = window.getComputedStyle(canvasWrap, null);
+
+const draw = new Draw(canvas, xMin, xMax, yMin, yMax);
+
+resizeGraph();
+window.addEventListener('resize', resizeGraph);
+
+function resizeGraph() {
+    let w = parseFloat(canvasWrapStyle.getPropertyValue('width'));
+    let paddingX = parseFloat(canvasWrapStyle.getPropertyValue('padding-left'));
+    let paddingY = parseFloat(canvasWrapStyle.getPropertyValue('padding-top'));
+
+    let h = w - 2 * paddingX + 2 * paddingY;
+    canvasWrap.style.height = h + 'px';
+    yAxis.style.height = h + 'px';
+
+    canvas.width = canvas.scrollWidth;
+    canvas.height = canvas.scrollHeight;
+
+    redraw();
+}
+
+function redraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (gmm) {
+        let pointColors = points
+            .map(p => gmm.predict(p))
+            .map(probs => probs.reduce(
+                (iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0
+            ))
+            .map(i => clusterColors[i]);
+
+        for (let i = 0; i < gmm.clusters; i++) {
+            draw.ellipse(gmm.means[i], gmm.covariances[i], clusterColors[i]);
+        }
+        draw.points(points, pointColors);
+
+        // if (gmm.singularity) draw.singularity(gmm.singularity);
+    } else {
+        draw.points(points);
+    }
+}
