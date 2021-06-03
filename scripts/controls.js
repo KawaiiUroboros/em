@@ -3,17 +3,19 @@ document.getElementById('btn-clear').addEventListener('click', function () {
     gmm = null;
     generatePoints();
     redraw();
+    document.getElementById('btn-run-e').disabled = false;
+    document.getElementById('btn-run-m').disabled = true;
 });
 
 document.getElementById('btn-run-a').addEventListener('click', _ => run(1));
 document.getElementById('btn-run-b').addEventListener('click', _ => run(10));
-
+document.getElementById('btn-run-e').addEventListener('click', _ => runE());
+document.getElementById('btn-run-m').addEventListener('click', _ => runM());
 
 // document.getElementById('btn-init-clusters').addEventListener('click', function() {
 // 	initializeGmm();
 // 	redraw();
 // });
-
 
 function run(iterations) {
     if (gmm) {
@@ -24,6 +26,24 @@ function run(iterations) {
         initializeGmm();
     }
     redraw();
+}
+function runE() {
+    if (!gmm) {
+        initializeGmm()
+    }
+    gmm.runE();
+    document.getElementById('btn-run-e').disabled = true;
+    document.getElementById('btn-run-m').disabled = false;
+}
+function runM() {
+    if (gmm) {
+        gmm.runM();
+    } else {
+        initializeGmm();
+    }
+    redraw();
+    document.getElementById('btn-run-e').disabled = false;
+    document.getElementById('btn-run-m').disabled = true;
 }
 
 function initializeGmm() {

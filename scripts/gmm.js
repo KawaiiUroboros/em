@@ -28,7 +28,7 @@
 
         'use strict';
 
-    const ct = require('cholesky-tools');
+        const ct = require('cholesky-tools');
 
         module.exports = class {
             constructor({weights, means, covariances, bufferSize}) {
@@ -95,6 +95,37 @@
                     // }
                 }
             }
+
+            runE() {
+                if (this.dataLength === 0) return;
+                runExpectation.call(this);
+            }
+
+            runM() {
+                runMaximization.call(this);
+                // calculate Cholesky decompositions of covariances
+                if (this.dimensions > 3) {
+                    this.covCholeskies = Array(this.clusters);
+                    for (let k = 0; k < this.clusters; k++) {
+                        this.covCholeskies[k] = ct.cholesky(this.covariances[k]);
+                    }
+                }
+
+                // calculate determinants of covariances
+                for (let k = 0; k < this.clusters; k++) {
+                    let L = this.covCholeskies && this.covCholeskies[k];
+                    this.covDeterminants[k] = ct.determinant(this.covariances[k], L);
+                }
+
+                // detect singularities
+                // for(let k=0; k<this.clusters; k++) {
+                // 	if(this.covDeterminants[k] <= 0) {
+                // 		this.singularity = this.means[k];
+                // 		return this.singularity;
+                // 	}
+                // }
+            }
+
 
             predict(point) {
                 let s = 0;
