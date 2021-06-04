@@ -2,6 +2,13 @@ document.getElementById('btn-clear').addEventListener('click', function () {
     points.length = 0;
     gmm = null;
     generatePoints();
+
+    let params = document.querySelector(".tool-tips");
+    let divs = params.querySelectorAll("div");
+
+    divs.forEach(div => params.removeChild(div));
+
+    initializeGmm();
     redraw();
     document.getElementById('btn-run-e').disabled = false;
     document.getElementById('btn-run-m').disabled = true;
@@ -69,4 +76,32 @@ function initializeGmm() {
     });
 
     points.forEach(p => gmm.addPoint(p));
+
+    for (let i = 0; i < gmm.clusters; i++) {
+        let params = document.querySelector(".tool-tips");
+
+        let div = document.createElement("div");
+        div.setAttribute("id", "cluster-"+i);
+        div.className = "tooltip";
+
+        div.style.backgroundColor = clusterColors[i];
+
+        let w = document.createElement("p");
+        let m = document.createElement("p");
+        let c = document.createElement("p");
+        w.className = "weight-" + i;
+        m.className = "mean-" + i;
+        c.className = "covariance-" + i;
+
+        w.textContent += "weight " + gmm.weights[i];
+        m.textContent += "mean " + gmm.means[i];
+        c.textContent += "covariance " + gmm.covariances[i];
+
+        div.appendChild(w);
+        div.appendChild(m);
+        div.appendChild(c);
+
+        params.appendChild(div);
+        // draw.ellipse(gmm.means[i], gmm.covariances[i], clusterColors[i], i);
+    }
 }

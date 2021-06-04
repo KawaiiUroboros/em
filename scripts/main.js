@@ -160,7 +160,17 @@ function redraw() {
         }
         draw.points(points, pointColors);
 
-        draw.parameters();
+        for (let i = 0; i < gmm.clusters; ++i) {
+            let div = document.getElementById("cluster-" + i);
+            let w = div.querySelector(".weight-"+i);
+            let m = div.querySelector(".mean-"+i);
+            let c = div.querySelector(".covariance-"+i);
+
+            w.textContent = gmm.weights[i];
+            m.textContent = gmm.means[i];
+            c.textContent = gmm.covariances[i];
+        }
+
         // if (gmm.singularity) draw.singularity(gmm.singularity);
     } else {
         draw.points(points);

@@ -81,10 +81,6 @@ class Draw {
         this.ctx.globalAlpha = 1;
     }
 
-    parameters() {
-        console.log(gmm.cResps);
-    }
-
     // singularity(point) {
     //     let w = this.canvas.width;
     //     let h = this.canvas.height;
