@@ -89,10 +89,24 @@ canvas.onmousemove = e => {
             .sort((a, b) => a.r1 - b.r1)[0];
 
         let index = draw.ellipses.indexOf(ellipse);
+        let tooltip = document.querySelector(".tool-tip");
+        let m = gmm.means[index];
+        let c = gmm.covariances[index]
+        if(m&&c){
+            tooltip.style.left = e.clientX+"px"
+            tooltip.style.top = e.clientY+"px"
+            tooltip.classList.add("active");
+        }
+        else
+            tooltip.classList.remove("active");
         console.log(gmm.means[index], gmm.covariances[index]);
+         
     }
-}
 
+}
+window.onscroll = e => {
+    
+}
 function points2string() {
     console.log(
         points
