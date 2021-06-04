@@ -81,7 +81,7 @@ function isInsideEllipse(h, k, x, y, a, b, theta) {
 canvas.onmousemove = e => {
     // let w = canvas.width;
     // let h = canvas.height;
-    let p = [e.offsetX , e.offsetY];
+    let p = [e.offsetX, e.offsetY];
 
     if (draw && draw.ellipses.length > 0) {
         let ellipse = draw.ellipses
@@ -90,22 +90,25 @@ canvas.onmousemove = e => {
 
         let index = draw.ellipses.indexOf(ellipse);
         let tooltip = document.querySelector(".tool-tip");
+        let spans = document.querySelectorAll(".tool-tip span");
+
         let m = gmm.means[index];
-        let c = gmm.covariances[index]
-        if(m&&c){
-            tooltip.style.left = e.clientX+"px"
-            tooltip.style.top = e.clientY+"px"
+        let c = gmm.covariances[index];
+
+
+        if (m && c) {
+            m = m.map(item => item.toFixed(2));
+            c = c.map(item => item.map(_item => _item.toFixed(2)));
+
+            spans.forEach((item, i) => item.innerHTML = [0, m, c][i]);
+            tooltip.style.left = e.pageX + 5 + "px";
+            tooltip.style.top = e.pageY + 5 + "px";
             tooltip.classList.add("active");
         }
         else
             tooltip.classList.remove("active");
-        console.log(gmm.means[index], gmm.covariances[index]);
-         
     }
 
-}
-window.onscroll = e => {
-    
 }
 function points2string() {
     console.log(
