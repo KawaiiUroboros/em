@@ -7,6 +7,7 @@ const s99 = Math.sqrt(9.21034);
 
 class Draw {
     constructor(canvas, xMin, xMax, yMin, yMax) {
+        this.ellipses = [];
         this.canvas = canvas;
         this.xMin = xMin;
         this.xMax = xMax;
@@ -43,10 +44,9 @@ class Draw {
         }
     }
 
-    ellipse(mean, covariance, color) {   // assuming cov matrix is symmetric
+    ellipse(mean, covariance, color, ellipse) {
+        // assuming cov matrix is symmetric
         if (!color) color = 'black';
-        let w = this.canvas.width;
-        let h = this.canvas.height;
         let a = covariance[0][0];
         let b = covariance[0][1];
         let d = covariance[1][1];
@@ -71,10 +71,18 @@ class Draw {
         this.ctx.fillStyle = color;
         this.ctx.lineWidth = 3;
         this.ctx.beginPath();
+
+        this.ellipses[ellipse] = { centerX: x, centerY: y, r1: r1pix, r2: r2pix, theta: theta };
         this.ctx.ellipse(x, y, r1pix, r2pix, theta, 0, 2 * Math.PI);
+
+
         this.ctx.fill();
         this.ctx.stroke();
         this.ctx.globalAlpha = 1;
+    }
+
+    parameters() {
+        console.log(gmm.cResps);
     }
 
     // singularity(point) {

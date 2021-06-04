@@ -32,6 +32,7 @@ function runE() {
         initializeGmm()
     }
     gmm.runE();
+    redraw();
     document.getElementById('btn-run-e').disabled = true;
     document.getElementById('btn-run-m').disabled = false;
 }

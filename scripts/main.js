@@ -73,6 +73,26 @@ canvas.addEventListener('click', function (e) {
     redraw();
 });
 
+function isInsideEllipse(h, k, x, y, a, b, theta) {
+    return (Math.pow(Math.cos(theta) * (x - h) + Math.sin(theta) * (y - k), 2) / Math.pow(a, 2)) +
+        (Math.pow(Math.sin(theta) * (x - h) - Math.cos(theta) * (y - k), 2) / Math.pow(b, 2));
+}
+
+canvas.onmousemove = e => {
+    // let w = canvas.width;
+    // let h = canvas.height;
+    let p = [e.offsetX , e.offsetY];
+
+    if (draw && draw.ellipses.length > 0) {
+        let ellipse = draw.ellipses
+            .filter(el => isInsideEllipse(el.centerX, el.centerY, p[0], p[1], el.r1, el.r2, el.theta) <= 1)
+            .sort((a, b) => a.r1 - b.r1)[0];
+
+        let index = draw.ellipses.indexOf(ellipse);
+        console.log(gmm.means[index], gmm.covariances[index]);
+    }
+}
+
 function points2string() {
     console.log(
         points
@@ -117,10 +137,11 @@ function redraw() {
             .map(i => clusterColors[i]);
 
         for (let i = 0; i < gmm.clusters; i++) {
-            draw.ellipse(gmm.means[i], gmm.covariances[i], clusterColors[i]);
+            draw.ellipse(gmm.means[i], gmm.covariances[i], clusterColors[i], i);
         }
         draw.points(points, pointColors);
 
+        draw.parameters();
         // if (gmm.singularity) draw.singularity(gmm.singularity);
     } else {
         draw.points(points);
