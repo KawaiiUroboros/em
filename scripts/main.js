@@ -49,7 +49,6 @@ function generatePoints() {
 
 generatePoints();
 
-
 canvas.addEventListener('click', function (e) {
     let w = canvas.width;
     let h = canvas.height;
@@ -79,8 +78,6 @@ function isInsideEllipse(h, k, x, y, a, b, theta) {
 }
 
 canvas.onmousemove = e => {
-    // let w = canvas.width;
-    // let h = canvas.height;
     let p = [e.offsetX, e.offsetY];
 
     if (draw && draw.ellipses.length > 0) {
@@ -92,15 +89,15 @@ canvas.onmousemove = e => {
         let tooltip = document.querySelector(".tool-tip");
         let spans = document.querySelectorAll(".tool-tip span");
 
+        let w = gmm.weights[index];
         let m = gmm.means[index];
         let c = gmm.covariances[index];
-
 
         if (m && c) {
             m = m.map(item => item.toFixed(2));
             c = c.map(item => item.map(_item => _item.toFixed(2)));
 
-            spans.forEach((item, i) => item.innerHTML = [0, m, c][i]);
+            spans.forEach((item, i) => item.innerHTML = [w.toFixed(2), m, c][i]);
             tooltip.style.left = e.pageX + 5 + "px";
             tooltip.style.top = e.pageY + 5 + "px";
             tooltip.classList.add("active");
@@ -108,8 +105,13 @@ canvas.onmousemove = e => {
         else
             tooltip.classList.remove("active");
     }
-
 }
+
+window.onmousemove = e => {
+    if (e.target.classList.contains('canvas-wrapper'))
+        document.querySelector(".tool-tip").classList.remove("active");
+}
+
 function points2string() {
     console.log(
         points
