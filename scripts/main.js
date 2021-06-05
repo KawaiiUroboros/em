@@ -76,10 +76,40 @@ function isInsideEllipse(h, k, x, y, a, b, theta) {
     return (Math.pow(Math.cos(theta) * (x - h) + Math.sin(theta) * (y - k), 2) / Math.pow(a, 2)) +
         (Math.pow(Math.sin(theta) * (x - h) - Math.cos(theta) * (y - k), 2) / Math.pow(b, 2));
 }
+function isPoint(el, p) {
+    if (el[0] <= p[0] + 2 && el[0] >= p[0] - 2) {
+        if (el[1] <= p[1] + 2 && el[1] >= p[1] - 2) {
 
+            return true;
+        }
+    }
+    return false;
+}
 canvas.onmousemove = e => {
     let p = [e.offsetX, e.offsetY];
-
+    let w = canvas.width;
+    let h = canvas.height;
+    let p2 = [e.offsetX / w * (xMax - xMin) + xMin, e.offsetY / h * (yMax - yMin) + yMin];
+    let point = points.filter(el => isPoint(el, p2))[0];
+    let resp;
+    if(!point&&gmm){
+        for (let i = 0; i < gmm.clusters; ++i) {
+            let div = document.getElementById("cluster-" + i);
+            let r = div.querySelector(".resp-"+i);
+            r.style.display = "none";
+        }
+    }
+    if (point&&gmm) {
+        resp = gmm.predict(point).map(item=>item.toFixed(2));
+        console.log(resp);
+        for (let i = 0; i < gmm.clusters; ++i) {
+            let div = document.getElementById("cluster-" + i);
+            let r = div.querySelector(".resp-"+i);
+            r.style.display = "";
+            r.textContent = "вероятность "+resp[i];
+        }
+    }
+    
     if (draw && draw.ellipses.length > 0) {
         let ellipse = draw.ellipses
             .filter(el => isInsideEllipse(el.centerX, el.centerY, p[0], p[1], el.r1, el.r2, el.theta) <= 1)
@@ -162,13 +192,13 @@ function redraw() {
 
         for (let i = 0; i < gmm.clusters; ++i) {
             let div = document.getElementById("cluster-" + i);
-            let w = div.querySelector(".weight-"+i);
-            let m = div.querySelector(".mean-"+i);
-            let c = div.querySelector(".covariance-"+i);
+            let w = div.querySelector(".weight-" + i);
+            let m = div.querySelector(".mean-" + i);
+            let c = div.querySelector(".covariance-" + i);
 
-            w.textContent = "вес "+ gmm.weights[i].toFixed(2);
-            m.textContent = "среднее "+gmm.means[i].map(item => item.toFixed(2));
-            c.textContent = "ковариация "+gmm.covariances[i].map(item=>item.map(item=>item.toFixed(2)));
+            w.textContent = "вес " + gmm.weights[i].toFixed(2);
+            m.textContent = "среднее " + gmm.means[i].map(item => item.toFixed(2));
+            c.textContent = "ковариация " + gmm.covariances[i].map(item => item.map(item => item.toFixed(2)));
         }
 
         // if (gmm.singularity) draw.singularity(gmm.singularity);

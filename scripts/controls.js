@@ -89,9 +89,12 @@ function initializeGmm() {
         let w = document.createElement("p");
         let m = document.createElement("p");
         let c = document.createElement("p");
+        let r = document.createElement("p");
         w.className = "weight-" + i;
         m.className = "mean-" + i;
         c.className = "covariance-" + i;
+        r.className = "resp-" + i;
+
 
         w.textContent += "weight " + gmm.weights[i];
         m.textContent += "mean " + gmm.means[i];
@@ -100,6 +103,7 @@ function initializeGmm() {
         div.appendChild(w);
         div.appendChild(m);
         div.appendChild(c);
+        div.appendChild(r);
 
         params.appendChild(div);
         // draw.ellipse(gmm.means[i], gmm.covariances[i], clusterColors[i], i);
