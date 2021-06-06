@@ -1,6 +1,7 @@
 document.getElementById('btn-clear').addEventListener('click', function () {
     points.length = 0;
     gmm = null;
+    point = null;
     generatePoints();
 
     let params = document.querySelector(".tool-tips");
@@ -33,16 +34,18 @@ function run(iterations) {
         initializeGmm();
     }
     redraw();
+    probability();
 }
 function runE() {
     if (!gmm) {
         initializeGmm()
     }
     gmm.runE();
-    redraw();
+    probability();
     document.getElementById('btn-run-e').disabled = true;
     document.getElementById('btn-run-m').disabled = false;
 }
+
 function runM() {
     if (gmm) {
         gmm.runM();
@@ -50,6 +53,7 @@ function runM() {
         initializeGmm();
     }
     redraw();
+    probability();
     document.getElementById('btn-run-e').disabled = false;
     document.getElementById('btn-run-m').disabled = true;
 }
