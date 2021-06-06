@@ -53,7 +53,6 @@ function runM() {
         initializeGmm();
     }
     redraw();
-    probability();
     document.getElementById('btn-run-e').disabled = false;
     document.getElementById('btn-run-m').disabled = true;
 }
