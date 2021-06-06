@@ -79,7 +79,6 @@ canvas.addEventListener('click', function (e) {
 
 
 function probability() {
-    let resp;
     if(!point&&gmm) {
         for (let i = 0; i < gmm.clusters; ++i) {
             let div = document.getElementById("cluster-" + i);
@@ -87,14 +86,13 @@ function probability() {
             r.style.display = "none";
         }
     }
+
     if (point&&gmm) {
-        resp = gmm.predict(point).map(item=>item.toFixed(2));
-        console.log(resp);
         for (let i = 0; i < gmm.clusters; ++i) {
             let div = document.getElementById("cluster-" + i);
             let r = div.querySelector(".resp-"+i);
             r.style.display = "";
-            r.textContent = "вероятность "+resp[i];
+            r.textContent = "вероятность "+gmm.cResps[i][points.indexOf(point)].toFixed(2);
         }
     }
 }

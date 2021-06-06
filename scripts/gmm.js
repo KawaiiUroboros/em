@@ -148,7 +148,6 @@
         function runExpectation() {
             this.tmpArr.fill(0, 0, this.dataLength);
             for (let k = 0; k < this.clusters; k++) {
-                let resps = this.cResps[k];
                 let weight = this.weights[k];
                 let mean = this.means[k];
                 let cov = this.covariances[k];
@@ -156,16 +155,15 @@
                 let covCholesky = this.covCholeskies && this.covCholeskies[k];
 
                 for (let i = 0; i < this.dataLength; i++) {
-                    this.tmpArr[i] += resps[i] = weight * pdf(this.data[i], mean, cov, covDet, covCholesky);
+                    this.tmpArr[i] += this.cResps[k][i] = weight * pdf(this.data[i], mean, cov, covDet, covCholesky);
                 }
             }
 
             for (let i = 0; i < this.dataLength; i++) this.tmpArr[i] = 1 / this.tmpArr[i];
 
             for (let k = 0; k < this.clusters; k++) {
-                let resps = this.cResps[k];
                 for (let i = 0; i < this.dataLength; i++) {
-                    resps[i] *= this.tmpArr[i];
+                    this.cResps[k][i] *= this.tmpArr[i];
                 }
             }
         }
