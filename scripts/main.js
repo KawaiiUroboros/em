@@ -92,7 +92,7 @@ function probability() {
             let div = document.getElementById("cluster-" + i);
             let r = div.querySelector(".resp-"+i);
             r.style.display = "";
-            r.textContent = "вероятность "+gmm.cResps[i][points.indexOf(point)].toFixed(2);
+            r.textContent = "probability "+gmm.cResps[i][points.indexOf(point)].toFixed(2);
         }
     }
 }
