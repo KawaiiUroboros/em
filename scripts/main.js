@@ -223,9 +223,9 @@ function redraw() {
             let m = div.querySelector(".mean-" + i);
             let c = div.querySelector(".covariance-" + i);
 
-            w.textContent = "вес " + gmm.weights[i].toFixed(2);
-            m.textContent = "среднее " + gmm.means[i].map(item => item.toFixed(2));
-            c.textContent = "ковариация " + gmm.covariances[i].map(item => item.map(item => item.toFixed(2)));
+            w.textContent = "weight " + gmm.weights[i].toFixed(2);
+            m.textContent = "min " + gmm.means[i].map(item => item.toFixed(2));
+            c.textContent = "covariance " + gmm.covariances[i].map(item => item.map(item => item.toFixed(2)));
         }
 
         // if (gmm.singularity) draw.singularity(gmm.singularity);
